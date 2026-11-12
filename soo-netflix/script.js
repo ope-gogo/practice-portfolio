@@ -43,6 +43,31 @@ async function fetchNowPlaying(apiKey) {
   return data.results;
 }
 
+// 배포(Vercel): 서버 함수 /api/now-playing 사용 (키는 서버에만 있음)
+// 로컬(python http.server): /api/ 가 없으므로 .env 파일로 직접 호출
+async function getMovies() {
+  try {
+    const res = await fetch("/api/now-playing");
+    if (res.ok) {
+      const data = await res.json();
+      return data.results;
+    }
+    if (res.status !== 404) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || `API 요청 실패 (${res.status})`);
+    }
+  } catch (err) {
+    if (!(err instanceof TypeError)) throw err;
+  }
+
+  const env = await loadEnv();
+  const apiKey = env.TMDB_API_KEY;
+  if (!apiKey || apiKey.includes("여기에")) {
+    throw new Error(".env 파일에 TMDB_API_KEY 값을 넣어주세요.");
+  }
+  return fetchNowPlaying(apiKey);
+}
+
 function createMovieCard(movie) {
   const card = document.createElement("div");
   card.className = "movie-card";
@@ -106,13 +131,7 @@ async function init() {
   setupHeaderScroll();
 
   try {
-    const env = await loadEnv();
-    const apiKey = env.TMDB_API_KEY;
-    if (!apiKey || apiKey.includes("여기에")) {
-      throw new Error(".env 파일에 TMDB_API_KEY 값을 넣어주세요.");
-    }
-
-    const movies = await fetchNowPlaying(apiKey);
+    const movies = await getMovies();
     if (!movies || movies.length === 0) {
       heroTitle.textContent = "현재 상영작이 없습니다.";
       return;
@@ -124,7 +143,7 @@ async function init() {
   } catch (err) {
     console.error(err);
     heroTitle.textContent = "영화를 불러오지 못했습니다";
-    messageEl.textContent = err.message + " (로컬 서버로 실행했는지 확인하세요: 예) python3 -m http.server 8000)";
+    messageEl.textContent = err.message;
   }
 }
 
