@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SOOFLIX - 현재 상영작</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header" id="header">
+    <div class="logo">SOOFLIX</div>
+    <nav class="nav">
+      <a href="#" class="active">홈</a>
+      <a href="#now-playing">현재 상영작</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="hero">
+    <div class="hero-content">
+      <h1 class="hero-title" id="hero-title">불러오는 중...</h1>
+      <p class="hero-overview" id="hero-overview"></p>
+      <div class="hero-buttons">
+        <button class="btn btn-play">▶ 재생</button>
+        <button class="btn btn-info">ⓘ 상세 정보</button>
+      </div>
+    </div>
+    <div class="hero-fade"></div>
+  </section>
+
+  <main class="content">
+    <section class="row">
+      <h2 class="row-title">지금 극장에서</h2>
+      <div class="row-wrapper">
+        <button class="row-arrow left" aria-label="왼쪽">‹</button>
+        <div class="row-posters" id="row-posters"></div>
+        <button class="row-arrow right" aria-label="오른쪽">›</button>
+      </div>
+    </section>
+
+    <section class="grid-section" id="now-playing">
+      <h2 class="row-title">현재 상영작 전체</h2>
+      <div class="movie-grid" id="movie-grid"></div>
+    </section>
+
+    <p class="message" id="message"></p>
+  </main>
+
+  <footer class="footer">Data provided by TMDB</footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
